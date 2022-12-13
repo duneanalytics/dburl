@@ -55,6 +55,7 @@ func TestBadParse(t *testing.T) {
 		{`tablestore+tcp://`, ErrInvalidTransportProtocol},
 		{`bend://`, ErrMissingHost},
 		{`databend://`, ErrMissingHost},
+		{`databricks://`, ErrMissingUser},
 		{`unknown_file.ext3`, ErrInvalidDatabaseScheme},
 	}
 	for i, test := range tests {
@@ -693,6 +694,18 @@ func TestParse(t *testing.T) {
 			`trs://admin@host/catalogname`,
 			`trino`,
 			`https://admin@host:8443?catalog=catalogname`,
+			``,
+		},
+		{
+			`trino://host/catalogname/schemaname?source=sourcename`,
+			`trino`,
+			`http://user@host:8080?catalog=catalogname&schema=schemaname&source=sourcename`,
+			``,
+		},
+		{
+			`trino://host/catalogname/schemaname?source=sourcename&extra_credentials=foo:bar`,
+			`trino`,
+			`http://user@host:8080?catalog=catalogname&extra_credentials=foo%3Abar&schema=schemaname&source=sourcename`,
 			``,
 		},
 		{

@@ -537,6 +537,16 @@ func GenPresto(u *URL) (string, string, error) {
 	if schema != "" {
 		q.Set("schema", schema)
 	}
+	// Add source parameter from u URL query string into z URL if it exists.
+	if source := u.Query().Get("source"); source != "" {
+		q.Set("source", source)
+	}
+
+	// Add extra_credentials parameter from u URL query string into z URL if it exists.
+	if extraCreds := u.Query().Get("extra_credentials"); extraCreds != "" {
+		q.Set("extra_credentials", extraCreds)
+	}
+
 	z.RawQuery = q.Encode()
 	return z.String(), "", nil
 }
